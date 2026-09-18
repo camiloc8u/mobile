@@ -5,10 +5,13 @@ import '../pestanas/pestana_miembros.dart';
 import '../pestanas/pestana_clases.dart';
 import '../pestanas/pestana_finanzas.dart';
 
+// importar para regresar
+import '../../inicio/app.dart';
+
 class PanelPrincipal extends StatelessWidget {
   const PanelPrincipal({super.key});
 
-  // Método para mostrar el cuadro de diálogo de confirmación
+  //cuadro cerrar sesion
   void _confirmarCierreSesion(BuildContext context) {
     showDialog(
       context: context,
@@ -33,20 +36,20 @@ class PanelPrincipal extends StatelessWidget {
                 backgroundColor: Colors.redAccent,
               ),
               onPressed: () {
-                // Aquí va la lógica real de cerrar sesión (limpiar tokens, etc.)
-                // Por ahora cerramos el modal y retrocedemos
+                
                 Navigator.pop(context); 
                 
-                // Si tienes una pantalla de Login, usarías algo como esto para ir a ella:
-                // Navigator.pushAndRemoveUntil(
-                //   context, 
-                //   MaterialPageRoute(builder: (context) => const PantallaLogin()), 
-                //   (Route<dynamic> route) => false
-                // );
+                // redirigir a inicio
+                Navigator.pushAndRemoveUntil(
+                  context, 
+                  MaterialPageRoute(builder: (context) => const GymZoneApp()), 
+                  (Route<dynamic> route) => false
+                );
 
+                // mensaje cerrar sesion
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Sesión cerrada correctamente'),
+                    content: Text('Sesión de administrador cerrada'),
                     backgroundColor: ColoresApp.verdePrincipal,
                   ),
                 );
@@ -71,12 +74,12 @@ class PanelPrincipal extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 1. CABECERA CON LA CORRECCIÓN DE OVERFLOW
+                // overflow
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // El widget Expanded soluciona el error de las líneas amarillas
+                    // error lineas amarillas
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,9 +112,9 @@ class PanelPrincipal extends StatelessWidget {
                       ),
                     ),
                     
-                    const SizedBox(width: 10), // Pequeño espacio entre el texto y el botón
+                    const SizedBox(width: 10), 
 
-                    // --- BOTÓN DE CERRAR SESIÓN ---
+                    // cerrar sesion
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: ColoresApp.fondoTarjeta,
@@ -129,7 +132,7 @@ class PanelPrincipal extends StatelessWidget {
                 
                 const SizedBox(height: 20),
 
-                // 2. MENÚ DE PESTAÑAS
+                // menu
                 const TabBar(
                   isScrollable: true,
                   tabAlignment: TabAlignment.start,
@@ -148,7 +151,7 @@ class PanelPrincipal extends StatelessWidget {
                 
                 const SizedBox(height: 20),
 
-                // 3. CONTENIDO (VISTAS)
+                // vistas
                 const Expanded(
                   child: TabBarView(
                     children: [

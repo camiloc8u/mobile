@@ -1,8 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import '../modelos/clase.dart';
 import '../colores/colores_app.dart';
+import '../../services/clase_service.dart';
 
 class PestanaClases extends StatefulWidget {
   const PestanaClases({super.key});
@@ -13,9 +12,6 @@ class PestanaClases extends StatefulWidget {
 
 class _PestanaClasesState extends State<PestanaClases> {
   late Future<List<Clase>> _futurasClases;
-  
-  // Tu enlace de MockAPI
-  final String urlApi = 'https://69dc3d4084f912a264037cde.mockapi.io/clases';
 
   @override
   void initState() {
@@ -25,60 +21,10 @@ class _PestanaClasesState extends State<PestanaClases> {
 
   void _actualizarLista() {
     setState(() {
-      _futurasClases = obtenerClases();
+      _futurasClases = ClaseService.obtenerClases();
     });
   }
 
-  // GET: Obtener todas las clases
-  Future<List<Clase>> obtenerClases() async {
-    final response = await http.get(Uri.parse(urlApi));
-    if (response.statusCode == 200) {
-      List jsonResponse = json.decode(response.body);
-      return jsonResponse.map((data) => Clase.fromJson(data)).toList();
-    } else {
-      throw Exception('Fallo al cargar las clases');
-    }
-  }
-
-  // POST: Crear una nueva clase
-  Future<void> crearClase(Map<String, dynamic> datosClase) async {
-    final response = await http.post(
-      Uri.parse(urlApi),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(datosClase),
-    );
-    if (response.statusCode == 201) {
-      _actualizarLista();
-    } else {
-      throw Exception('Error al crear la clase');
-    }
-  }
-
-  // PUT: Actualizar una clase existente
-  Future<void> actualizarClase(String id, Map<String, dynamic> datosClase) async {
-    final response = await http.put(
-      Uri.parse('$urlApi/$id'),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(datosClase),
-    );
-    if (response.statusCode == 200) {
-      _actualizarLista();
-    } else {
-      throw Exception('Error al actualizar la clase');
-    }
-  }
-
-  // DELETE: Eliminar una clase
-  Future<void> eliminarClase(String id) async {
-    final response = await http.delete(Uri.parse('$urlApi/$id'));
-    if (response.statusCode == 200) {
-      _actualizarLista();
-    } else {
-      throw Exception('Error al eliminar la clase');
-    }
-  }
-
-  // Modal para Crear / Editar
   void _mostrarFormularioClase({Clase? clase}) {
     final esEdicion = clase != null;
     
@@ -124,19 +70,17 @@ class _PestanaClasesState extends State<PestanaClases> {
 
                 try {
                   if (esEdicion) {
-                    await actualizarClase(clase.id, datos);
+                    await ClaseService.actualizarClase(clase.id, datos);
                   } else {
-                    await crearClase(datos);
+                    await ClaseService.crearClase(datos);
                   }
+                  _actualizarLista();
                   if (context.mounted) Navigator.pop(context);
                 } catch (e) {
                   print(e);
                 }
               },
-              child: const Text(
-                'Guardar', 
-                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)
-              ),
+              child: const Text('Guardar', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
             ),
           ],
         );
@@ -144,7 +88,6 @@ class _PestanaClasesState extends State<PestanaClases> {
     );
   }
 
-  // Modal de confirmación para eliminar
   void _confirmarEliminacion(String id, String nombreClase) {
     showDialog(
       context: context,
@@ -164,8 +107,13 @@ class _PestanaClasesState extends State<PestanaClases> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
               onPressed: () async {
-                await eliminarClase(id);
-                if (context.mounted) Navigator.pop(context);
+                try {
+                  await ClaseService.eliminarClase(id);
+                  _actualizarLista();
+                  if (context.mounted) Navigator.pop(context);
+                } catch(e) {
+                  print(e);
+                }
               },
               child: const Text('Eliminar', style: TextStyle(color: Colors.white)),
             ),
@@ -246,7 +194,6 @@ class _PestanaClasesState extends State<PestanaClases> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Información de la clase
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -271,8 +218,6 @@ class _PestanaClasesState extends State<PestanaClases> {
                             ],
                           ),
                         ),
-                        
-                        // Cupo
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
@@ -281,10 +226,7 @@ class _PestanaClasesState extends State<PestanaClases> {
                             Text(clase.cupo, style: const TextStyle(color: ColoresApp.verdePrincipal, fontSize: 16, fontWeight: FontWeight.bold)),
                           ],
                         ),
-                        
                         const SizedBox(width: 16),
-                        
-                        // Botones de acción (Editar y Eliminar)
                         Row(
                           children: [
                             IconButton(

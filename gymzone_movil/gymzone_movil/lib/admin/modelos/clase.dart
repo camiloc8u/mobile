@@ -16,7 +16,7 @@ class Clase {
   // Convierte el JSON de MockAPI a nuestro objeto de Dart
   factory Clase.fromJson(Map<String, dynamic> json) {
     return Clase(
-      id: json['id']?.toString() ?? '', // MockAPI suele usar Strings para los IDs
+      id: json['id']?.toString() ?? '', 
       nombre: json['nombre'] ?? '',
       horario: json['horario'] ?? '',
       entrenador: json['entrenador'] ?? '',
@@ -24,7 +24,7 @@ class Clase {
     );
   }
 
-  // Convierte nuestro objeto Dart a JSON para enviarlo a MockAPI
+  // objeto a json
   Map<String, dynamic> toJson() {
     return {
       'nombre': nombre,
