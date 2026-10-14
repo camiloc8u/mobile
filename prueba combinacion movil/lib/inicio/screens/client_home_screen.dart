@@ -7,7 +7,6 @@ import '../../components_profile/classes_tab.dart';
 import '../../components_profile/progress_tab.dart';
 import '../theme/app_colors.dart';
 import 'main_navigation_screen.dart'; 
-import 'notifications_screen.dart';
 
 class ClientHomeScreen extends StatefulWidget {
   final Map<String, dynamic> usuario;
@@ -71,11 +70,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           ),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_none, color: AppColors.greenColor),
-            tooltip: 'Notificaciones',
-            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen())),
-          ),
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.redAccent),
             tooltip: 'Cerrar Sesión',

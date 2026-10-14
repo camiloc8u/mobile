@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../models/cart_model.dart';
 import '../theme/app_colors.dart';
 import 'cart_screen.dart';
-import '../widgets/auth_notification_button.dart';
 
 class FitMenuScreen extends StatelessWidget {
   const FitMenuScreen({super.key});
@@ -56,7 +55,7 @@ class FitMenuScreen extends StatelessWidget {
               );
             },
           ),
-          const AuthNotificationButton(),
+          IconButton(icon: const Icon(Icons.notifications_none, color: Colors.white), onPressed: () {}),
         ],
       ),
       body: SingleChildScrollView(

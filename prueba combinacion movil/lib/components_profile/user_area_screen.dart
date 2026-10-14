@@ -9,7 +9,6 @@ import 'classes_tab.dart';
 
 // IMPORTANTE: Asegúrate de que esta ruta apunte a la pantalla que usas como inicio absoluto
 import '../../inicio/screens/main_navigation_screen.dart';
-import '../../inicio/screens/notifications_screen.dart';
 
 // COLORES
 const Color greenColor = Color(0xFFAEE000);
@@ -89,11 +88,6 @@ class _UserAreaScreenState extends State<UserAreaScreen> {
                     style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                 ],
-              ),
-              IconButton(
-                icon: const Icon(Icons.notifications_none, color: greenColor),
-                tooltip: 'Notificaciones',
-                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen())),
               ),
               // --- BOTÓN DE CERRAR SESIÓN ---
               IconButton(

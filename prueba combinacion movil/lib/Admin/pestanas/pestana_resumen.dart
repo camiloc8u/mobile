@@ -97,8 +97,8 @@ class _PestanaResumenState extends State<PestanaResumen> {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
       decoration: BoxDecoration(
-        color: ColoresApp.verdePrincipal.withValues(alpha: 0.05),
-        border: Border.all(color: ColoresApp.verdePrincipal.withValues(alpha: 0.3), width: 2),
+        color: ColoresApp.verdePrincipal.withOpacity(0.05),
+        border: Border.all(color: ColoresApp.verdePrincipal.withOpacity(0.3), width: 2),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -106,7 +106,7 @@ class _PestanaResumenState extends State<PestanaResumen> {
         children: [
           Container(
             padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(color: ColoresApp.verdePrincipal.withValues(alpha: 0.1), shape: BoxShape.circle),
+            decoration: BoxDecoration(color: ColoresApp.verdePrincipal.withOpacity(0.1), shape: BoxShape.circle),
             child: const Icon(Icons.attach_money, color: ColoresApp.verdePrincipal, size: 40),
           ),
           const SizedBox(height: 16),

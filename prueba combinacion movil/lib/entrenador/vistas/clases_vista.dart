@@ -1,30 +1,26 @@
 import 'package:flutter/material.dart';
-import '../../Admin/modelos/clase.dart';
-import '../widgets/entrenador_widgets.dart';
+import '../colores_entrenador.dart';
+import '../widgets/lista_clases_widget.dart';
 
-class ClasesVista extends StatelessWidget {
-  final List<Clase> classes; // Ahora es una lista de objetos Clase
-  final bool isLoadingClasses;
-  final String classFilter;
-  final ValueChanged<String> onFilterChanged;
-  final VoidCallback onAddClass;
-  final Function(Clase) onClassTap;
+class VistaClases extends StatefulWidget {
+  final List<Map<String, String>> clases;
+  final VoidCallback abrirDialogo;
+  final Function(Map<String, String>) verDetalles;
 
-  const ClasesVista({
-    super.key,
-    required this.classes,
-    required this.isLoadingClasses,
-    required this.classFilter,
-    required this.onFilterChanged,
-    required this.onAddClass,
-    required this.onClassTap,
-  });
+  const VistaClases({super.key, required this.clases, required this.abrirDialogo, required this.verDetalles});
+
+  @override
+  State<VistaClases> createState() => _VistaClasesState();
+}
+
+class _VistaClasesState extends State<VistaClases> {
+  String _classFilter = 'Todas';
 
   @override
   Widget build(BuildContext context) {
-    // Si tu modelo Clase no tiene 'turno', por ahora mostramos todas las clases.
-    // Cuando lo agregues, puedes volver a habilitar este filtro.
-    final filteredClasses = classes; 
+    final filteredClasses = _classFilter == 'Todas'
+        ? widget.clases
+        : widget.clases.where((c) => c['shift'] == _classFilter).toList();
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -35,30 +31,24 @@ class ClasesVista extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               DropdownButton<String>(
-                dropdownColor: cardColor,
-                value: classFilter,
-                style: const TextStyle(color: primaryGreen, fontWeight: FontWeight.bold),
-                items: ['Todas', 'Mañana', 'Tarde'].map((String value) => DropdownMenuItem<String>(value: value, child: Text('Turno: $value'))).toList(),
-                onChanged: (val) {
-                  if (val != null) onFilterChanged(val);
-                },
+                dropdownColor: ColoresEntrenador.tarjeta,
+                value: _classFilter,
+                style: const TextStyle(color: ColoresEntrenador.verde, fontWeight: FontWeight.bold),
+                items: ['Todas', 'Mañana', 'Tarde'].map((String value) {
+                  return DropdownMenuItem<String>(value: value, child: Text('Turno: $value'));
+                }).toList(),
+                onChanged: (val) => setState(() => _classFilter = val!),
               ),
               ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(backgroundColor: primaryGreen),
-                onPressed: onAddClass, 
+                style: ElevatedButton.styleFrom(backgroundColor: ColoresEntrenador.verde),
+                onPressed: widget.abrirDialogo,
                 icon: const Icon(Icons.add, color: Colors.black),
                 label: const Text('Crear Clase', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
               )
             ],
           ),
           const SizedBox(height: 16),
-          Expanded(
-            child: isLoadingClasses
-                ? const Center(child: CircularProgressIndicator(color: primaryGreen))
-                : filteredClasses.isEmpty
-                    ? Center(child: Text("No hay clases para este filtro", style: TextStyle(color: Colors.grey[500])))
-                    : EntrenadorWidgets.buildClassesList(filteredClasses, onClassTap),
-          ),
+          Expanded(child: SingleChildScrollView(child: ListaClasesWidget(clases: filteredClasses, onClassTap: widget.verDetalles))),
         ],
       ),
     );

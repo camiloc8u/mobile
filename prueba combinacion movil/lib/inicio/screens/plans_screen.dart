@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 import '../widgets/auth_widgets.dart';
-import '../widgets/auth_notification_button.dart';
 
 class PlansScreen extends StatelessWidget {
   const PlansScreen({super.key});
@@ -80,9 +79,7 @@ class PlansScreen extends StatelessWidget {
         backgroundColor: Colors.transparent, 
         elevation: 0, 
         title: const Text('PLANES', style: TextStyle(fontWeight: FontWeight.bold)), 
-        actions: [
-          const AuthNotificationButton(),
-        ],
+        actions: [IconButton(icon: const Icon(Icons.notifications_none), onPressed: () {})]
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

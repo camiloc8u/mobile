@@ -20,7 +20,7 @@ class PagoService {
       "payer": customerData
     };
 
-    // 🔍 Imprimimos en la consola lo que estamos mandando al servidor
+
     print('📦 PAYLOAD ENVIADO A EXPRESS: ${jsonEncode(payload)}');
 
     final response = await http.post(
@@ -29,7 +29,7 @@ class PagoService {
       body: jsonEncode(payload),
     );
 
-    // 🔍 Imprimimos lo que respondió exactamente el servidor de Node
+   
     print('📥 RESPUESTA DE EXPRESS [Status ${response.statusCode}]: ${response.body}');
 
     if (response.statusCode == 200) {

@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/cart_model.dart'; 
 import '../theme/app_colors.dart';
 import '../../services/pago_service.dart';
-import '../../services/notification_service.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key});
@@ -55,15 +52,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
       // 2. MANDAMOS TODO A LA CARPETA DE APIs (Servicios)
       final urlDePago = await PagoService.procesarPago(cart, datosCliente);
-      final prefs = await SharedPreferences.getInstance();
-      final savedUser = prefs.getString('usuario');
-      final userData = savedUser == null ? null : jsonDecode(savedUser) as Map<String, dynamic>;
-      await NotificationService().createInAppNotification(
-        title: 'Pago iniciado',
-        message: 'Tu solicitud de pago fue creada. Completa el proceso en Mercado Pago.',
-        userId: int.tryParse('${userData?['idusuario'] ?? ''}'),
-        broadcast: false,
-      );
       
       if (!mounted) return;
 
@@ -137,7 +125,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         Expanded(
                           flex: 1, 
                           child: DropdownButtonFormField<String>(
-                            initialValue: idType, 
+                            value: idType, 
                             dropdownColor: AppColors.cardBg, 
                             style: const TextStyle(color: Colors.white), 
                             decoration: _inputDecoration('Tipo ID'), 

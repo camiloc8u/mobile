@@ -45,27 +45,19 @@ class UsuarioService {
   static Future<Map<String, dynamic>?> login(String correo, String password) async {
     final response = await http.get(Uri.parse('${ApiConfig.baseUrlNode}/usuarios'));
     if (response.statusCode == 200) {
-      final usuarios = json.decode(response.body) as List<dynamic>;
-      for (final usuario in usuarios) {
-        final datos = usuario as Map<String, dynamic>;
-        if ('${datos['correo'] ?? ''}'.trim().toLowerCase() == correo.trim().toLowerCase() &&
-            '${datos['password'] ?? ''}' == password) {
-          return datos;
-        }
-      }
-      return null;
+      List usuarios = json.decode(response.body);
+      return usuarios.firstWhere((u) => u['correo'] == correo && u['password'] == password, orElse: () => null);
     } else {
-      throw Exception('La API respondió con estado ${response.statusCode}');
+      throw Exception('Error al conectar con el servidor');
     }
   }
 
-  static Future<Map<String, dynamic>> registrarCliente(Map<String, dynamic> datosRegistro) async {
+  static Future<void> registrarCliente(Map<String, dynamic> datosRegistro) async {
     final response = await http.post(
       Uri.parse('${ApiConfig.baseUrlNode}/usuarios'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode(datosRegistro),
     );
     if (response.statusCode != 200 && response.statusCode != 201) throw Exception('Error al registrar');
-    return json.decode(response.body) as Map<String, dynamic>;
   }
 }

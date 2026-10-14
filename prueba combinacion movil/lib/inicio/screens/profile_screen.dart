@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 
 import '../../Admin/pantallas/panel_principal.dart';
 import 'client_home_screen.dart';
 import '../../entrenador/pantallas/entrenador_screen.dart';
 import '../../services/usuario_service.dart';
-import '../../services/notification_service.dart';
-import '../theme/app_colors.dart'; // Colores globales
+import '../theme/app_colors.dart'; 
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -76,23 +73,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             if (!context.mounted) return;
 
                             if (usuarioLogueado != null) {
-                              final prefs = await SharedPreferences.getInstance();
-                              await prefs.setString('usuario', jsonEncode(usuarioLogueado));
-                              if (!context.mounted) return;
+                              // ✨ VALIDACIÓN DE ESTADO INACTIVO ✨
+                              String estado = usuarioLogueado['estado_cuenta']?.toString().toLowerCase() ?? 'activo';
+                              
+                              if (estado == 'inactivo') {
+                                setStateDialog(() {
+                                  errorMessage = 'Tu cuenta está inactiva. Contacta al administrador.';
+                                  isLoading = false;
+                                });
+                                return; // Detenemos el proceso, no entra.
+                              }
 
-                              await NotificationService().createInAppNotification(
-                                title: 'Inicio de sesión',
-                                message: 'Has iniciado sesión correctamente en GymZone.',
-                                userId: int.tryParse('${usuarioLogueado['idusuario'] ?? ''}'),
-                              );
-                              if (!context.mounted) return;
                               Navigator.pop(context);
                               String rol = usuarioLogueado['rol'];
 
                               if (rol == 'Administrador') {
                                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const PanelPrincipal()));
                               } else if (rol == 'Entrenador') {
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => EntrenadorScreen(usuario: usuarioLogueado)));
+                                // ✨ AQUÍ ESTÁ LA CORRECCIÓN: Usamos TrainerDashboardScreen ✨
+                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TrainerDashboardScreen(usuario: usuarioLogueado)));
                               } else {
                                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ClientHomeScreen(usuario: usuarioLogueado)));
                               }
@@ -104,7 +103,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             }
                           } catch (e) {
                             setStateDialog(() {
-                              errorMessage = 'Error de conexión: $e';
+                              errorMessage = 'Error de conexión';
                               isLoading = false;
                             });
                           }
@@ -160,7 +159,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     const SizedBox(height: 12),
                     DropdownButtonFormField<String>(
-                      initialValue: tipoDocumento,
+                      value: tipoDocumento,
                       dropdownColor: AppColors.cardBg,
                       style: const TextStyle(color: Colors.white),
                       decoration: _inputDecoration('Tipo de Documento'),
@@ -230,13 +229,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               'estado_cuenta': 'Activo',
                             };
 
-                            final usuarioRegistrado = await UsuarioService.registrarCliente(datosRegistro);
-                            await NotificationService().createInAppNotification(
-                              title: 'Cuenta creada',
-                              message: 'Tu cuenta de GymZone fue creada correctamente.',
-                              userId: int.tryParse('${usuarioRegistrado['idusuario'] ?? 0}'),
-                              broadcast: false,
-                            );
+                            await UsuarioService.registrarCliente(datosRegistro);
 
                             if (!context.mounted) return;
 
@@ -272,7 +265,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // ✅ AQUÍ ESTABA EL ERROR: Se eliminó el 'const' de InputDecoration
   InputDecoration _inputDecoration(String label) {
     return InputDecoration(
       labelText: label,

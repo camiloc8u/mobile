@@ -160,7 +160,7 @@ class _ProfileTabState extends State<ProfileTab> {
                     const Text('PLAN DE MEMBRESÍA', style: TextStyle(color: Colors.grey, fontSize: 11)),
                     const SizedBox(height: 6),
                     DropdownButtonFormField<String>(
-                      initialValue: _planSeleccionado,
+                      value: _planSeleccionado,
                       dropdownColor: const Color(0xFF18181B),
                       style: const TextStyle(color: Colors.white, fontSize: 14),
                       decoration: _inputDecoration(),

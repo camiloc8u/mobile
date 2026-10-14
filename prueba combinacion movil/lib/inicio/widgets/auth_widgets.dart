@@ -1,14 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
-
-import '../../Admin/pantallas/panel_principal.dart';
-import '../../entrenador/pantallas/entrenador_screen.dart';
-import '../../services/api_config.dart';
-import '../../services/notification_service.dart';
-import '../../services/usuario_service.dart';
-import '../screens/client_home_screen.dart';
 import '../theme/app_colors.dart'; // Usamos los colores globales
 
 const _authCardBg = Color(0xFF131A26);
@@ -49,7 +39,7 @@ Widget _authField(String label, String hint, {bool obscureText = false, TextInpu
       Row(
         children: [
           Expanded(child: Text(label, style: const TextStyle(color: _authLabelColor, fontSize: 12, letterSpacing: 0.8))),
-          ?trailing,
+          if (trailing != null) trailing,
         ],
       ),
       const SizedBox(height: 6),
@@ -183,214 +173,63 @@ Widget _authFooter(String text, String link, VoidCallback onTap) {
 }
 
 Future<void> showLoginDialog(BuildContext context) async {
-  final emailCtrl = TextEditingController();
-  final passCtrl = TextEditingController();
-
   return showDialog<void>(
     context: context,
-    builder: (dialogContext) {
-      bool isLoading = false;
-      String errorMessage = '';
-
-      return StatefulBuilder(
-        builder: (context, setStateDialog) {
-          return _authShell(
-            dialogContext,
-            children: [
-              _authTitle('INICIAR SESIÓN'),
-              const SizedBox(height: 20),
-              _authField('EMAIL', 'tu@email.com', keyboardType: TextInputType.emailAddress, controller: emailCtrl),
-              const SizedBox(height: 16),
-              _authField(
-                'CONTRASEÑA',
-                '••••••••',
-                obscureText: true,
-                controller: passCtrl,
-                trailing: GestureDetector(
-                  onTap: () {
-                    Navigator.of(dialogContext).pop();
-                    showForgotPasswordDialog(context);
-                  },
-                  child: const Text('¿OLVIDASTE TU CONTRASEÑA?', style: TextStyle(color: AppColors.greenColor, fontSize: 11, fontWeight: FontWeight.bold)),
-                ),
-              ),
-              if (errorMessage.isNotEmpty) ...[
-                const SizedBox(height: 14),
-                Text(errorMessage, style: const TextStyle(color: Colors.redAccent, fontSize: 12)),
-              ],
-              const SizedBox(height: 20),
-              _authPrimaryButton(
-                'INICIAR SESIÓN',
-                isLoading
-                    ? () {}
-                    : () async {
-                        final email = emailCtrl.text.trim();
-                        final password = passCtrl.text;
-
-                        if (email.isEmpty || password.isEmpty) {
-                          setStateDialog(() => errorMessage = 'Ingresa correo y contraseña');
-                          return;
-                        }
-
-                        setStateDialog(() {
-                          isLoading = true;
-                          errorMessage = '';
-                        });
-
-                        try {
-                          final ping = await http.get(Uri.parse('${ApiConfig.baseUrlNode}/usuarios')).timeout(const Duration(seconds: 8));
-                          if (ping.statusCode < 200 || ping.statusCode >= 400) {
-                            throw Exception('API no disponible');
-                          }
-
-                          final usuarioLogueado = await UsuarioService.login(email, password);
-
-                          if (!Navigator.of(dialogContext).context.mounted) return;
-
-                          if (usuarioLogueado != null) {
-                            final prefs = await SharedPreferences.getInstance();
-                            await prefs.setString('usuario', jsonEncode(usuarioLogueado));
-
-                            await NotificationService().createInAppNotification(
-                              title: 'Inicio de sesión',
-                              message: 'Has iniciado sesión correctamente en GymZone.',
-                              userId: int.tryParse('${usuarioLogueado['idusuario'] ?? 0}'),
-                              broadcast: false,
-                            );
-
-                            if (!context.mounted) return;
-
-                            Navigator.of(context).pop();
-
-                            final rol = usuarioLogueado['rol']?.toString() ?? '';
-                            if (rol == 'Administrador') {
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const PanelPrincipal()));
-                            } else if (rol == 'Entrenador') {
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => EntrenadorScreen(usuario: usuarioLogueado)));
-                            } else {
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ClientHomeScreen(usuario: usuarioLogueado)));
-                            }
-                          } else {
-                            setStateDialog(() {
-                              errorMessage = 'Correo o contraseña incorrectos';
-                              isLoading = false;
-                            });
-                          }
-                        } catch (e) {
-                          setStateDialog(() {
-                            errorMessage = 'Error de conexión con el servidor. Verifica que MySQL y la API estén activos.';
-                            isLoading = false;
-                          });
-                        }
-                      },
-              ),
-              const SizedBox(height: 16),
-              _authFooter('¿No tienes cuenta? ', 'Regístrate aquí', () {
-                  Navigator.of(dialogContext).pop();
-                  showRegisterDialog(context);
-              }),
-            ],
-          );
-        },
-      );
-    },
+    builder: (dialogContext) => _authShell(
+      dialogContext,
+      children: [
+        _authTitle('INICIAR SESIÓN'),
+        const SizedBox(height: 20),
+        _authField('EMAIL', 'tu@email.com', keyboardType: TextInputType.emailAddress),
+        const SizedBox(height: 16),
+        _authField(
+          'CONTRASEÑA',
+          '••••••••',
+          obscureText: true,
+          trailing: GestureDetector(
+            onTap: () {
+              Navigator.of(dialogContext).pop();
+              showForgotPasswordDialog(context);
+            },
+            child: const Text('¿OLVIDASTE TU CONTRASEÑA?', style: TextStyle(color: AppColors.greenColor, fontSize: 11, fontWeight: FontWeight.bold)),
+          ),
+        ),
+        const SizedBox(height: 20),
+        _authPrimaryButton('INICIAR SESIÓN', () => Navigator.of(dialogContext).pop()),
+        const SizedBox(height: 16),
+        _authFooter('¿No tienes cuenta? ', 'Regístrate aquí', () {
+            Navigator.of(dialogContext).pop();
+            showRegisterDialog(context);
+        }),
+      ],
+    ),
   );
 }
 
 Future<void> showRegisterDialog(BuildContext context) async {
-  final nombreCtrl = TextEditingController();
-  final emailCtrl = TextEditingController();
-  final passCtrl = TextEditingController();
-  final phoneCtrl = TextEditingController();
-
   return showDialog<void>(
     context: context,
-    builder: (dialogContext) {
-      bool isLoading = false;
-      String errorMessage = '';
-
-      return StatefulBuilder(
-        builder: (context, setStateDialog) {
-          return _authShell(
-            dialogContext,
-            children: [
-              _authTitle('REGÍSTRATE'),
-              const SizedBox(height: 20),
-              _authField('NOMBRE COMPLETO', 'Tu nombre', controller: nombreCtrl),
-              const SizedBox(height: 16),
-              _authField('EMAIL', 'tu@email.com', keyboardType: TextInputType.emailAddress, controller: emailCtrl),
-              const SizedBox(height: 16),
-              _authField('CONTRASEÑA', '••••••••', obscureText: true, controller: passCtrl),
-              const SizedBox(height: 16),
-              _authField('TELÉFONO', '+57 123 456 789', keyboardType: TextInputType.phone, controller: phoneCtrl),
-              if (errorMessage.isNotEmpty) ...[
-                const SizedBox(height: 14),
-                Text(errorMessage, style: const TextStyle(color: Colors.redAccent, fontSize: 12)),
-              ],
-              const SizedBox(height: 20),
-              _authPrimaryButton(
-                'CREAR CUENTA',
-                isLoading
-                    ? () {}
-                    : () async {
-                        final nombre = nombreCtrl.text.trim();
-                        final email = emailCtrl.text.trim();
-                        final password = passCtrl.text;
-
-                        if (nombre.isEmpty || email.isEmpty || password.isEmpty) {
-                          setStateDialog(() => errorMessage = 'Completa nombre, email y contraseña');
-                          return;
-                        }
-
-                        setStateDialog(() {
-                          isLoading = true;
-                          errorMessage = '';
-                        });
-
-                        try {
-                          final usuarioRegistrado = await UsuarioService.registrarCliente({
-                            'primer_nombre': nombre,
-                            'primer_apellido': '',
-                            'tipo_doc': 'Cédula',
-                            'num_doc': phoneCtrl.text.trim().replaceAll(RegExp(r'\D'), ''),
-                            'correo': email,
-                            'password': password,
-                            'rol': 'Cliente',
-                            'estado_cuenta': 'Activo',
-                          });
-
-                          await NotificationService().createInAppNotification(
-                            title: 'Nuevo registro',
-                            message: 'Tu cuenta se registró correctamente en GymZone.',
-                            userId: int.tryParse('${usuarioRegistrado['idusuario'] ?? 0}'),
-                            broadcast: false,
-                          );
-
-                          if (!context.mounted) return;
-
-                          Navigator.of(context).pop();
-                          showLoginDialog(context);
-                          ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-                            const SnackBar(content: Text('Cuenta creada. Ahora puedes iniciar sesión.'), backgroundColor: AppColors.greenColor),
-                          );
-                        } catch (e) {
-                          setStateDialog(() {
-                            errorMessage = 'No se pudo registrar en el servidor';
-                            isLoading = false;
-                          });
-                        }
-                      },
-              ),
-              const SizedBox(height: 16),
-              _authFooter('¿Ya tienes cuenta? ', 'Inicia sesión', () {
-                  Navigator.of(dialogContext).pop();
-                  showLoginDialog(context);
-              }),
-            ],
-          );
-        },
-      );
-    },
+    builder: (dialogContext) => _authShell(
+      dialogContext,
+      children: [
+        _authTitle('REGÍSTRATE'),
+        const SizedBox(height: 20),
+        _authField('NOMBRE COMPLETO', 'Tu nombre'),
+        const SizedBox(height: 16),
+        _authField('EMAIL', 'tu@email.com', keyboardType: TextInputType.emailAddress),
+        const SizedBox(height: 16),
+        _authField('CONTRASEÑA', '••••••••', obscureText: true),
+        const SizedBox(height: 16),
+        _authField('TELÉFONO', '+57 123 456 789', keyboardType: TextInputType.phone),
+        const SizedBox(height: 20),
+        _authPrimaryButton('CREAR CUENTA', () => Navigator.of(dialogContext).pop()),
+        const SizedBox(height: 16),
+        _authFooter('¿Ya tienes cuenta? ', 'Inicia sesión', () {
+            Navigator.of(dialogContext).pop();
+            showLoginDialog(context);
+        }),
+      ],
+    ),
   );
 }
 

@@ -1,6 +1,7 @@
 name: admin
 description: "A new Flutter project."
-publish_to: 'none'
+
+publish_to: 'none' 
 
 version: 1.0.0+1
 
@@ -10,12 +11,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^1.2.0
   cupertino_icons: ^1.0.8
+  intl: ^0.20.3
+  table_calendar: ^3.1.2
+  http: ^1.2.0
   shared_preferences: ^2.5.5
   url_launcher: ^6.3.2
   provider: ^6.1.5+1
-  supabase_flutter: ^2.17.2
 
 dev_dependencies:
   flutter_test:
@@ -23,4 +25,4 @@ dev_dependencies:
   flutter_lints: ^6.0.0
 
 flutter:
-  uses-material-design: true # <--- Agregado y activado correctamente
+  uses-material-design: true

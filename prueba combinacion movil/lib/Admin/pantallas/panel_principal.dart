@@ -7,7 +7,6 @@ import '../pestanas/pestana_finanzas.dart';
 
 // importar para regresar
 import '../../inicio/app.dart';
-import '../../inicio/screens/notifications_screen.dart';
 
 class PanelPrincipal extends StatelessWidget {
   const PanelPrincipal({super.key});
@@ -114,13 +113,6 @@ class PanelPrincipal extends StatelessWidget {
                     ),
                     
                     const SizedBox(width: 10), 
-
-                    IconButton(
-                      icon: const Icon(Icons.notifications_none, color: ColoresApp.verdePrincipal),
-                      tooltip: 'Notificaciones',
-                      onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen())),
-                    ),
-                    const SizedBox(width: 8),
 
                     // cerrar sesion
                     ElevatedButton.icon(

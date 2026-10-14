@@ -6,11 +6,10 @@ import '../theme/app_colors.dart'; // Usamos colores centralizados
 import '../widgets/auth_widgets.dart';
 import '../widgets/quick_card.dart';
 import 'cart_screen.dart';
-import '../widgets/auth_notification_button.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     // Escuchamos los cambios en el carrito global
@@ -27,10 +26,20 @@ class HomeScreen extends StatelessWidget {
             SizedBox(width: 8),
             Text.rich(
               TextSpan(
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, letterSpacing: 1.2),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  letterSpacing: 1.2,
+                ),
                 children: [
-                  TextSpan(text: 'GYM', style: TextStyle(color: Colors.white)),
-                  TextSpan(text: 'ZONE', style: TextStyle(color: AppColors.greenColor)),
+                  TextSpan(
+                    text: 'GYM',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  TextSpan(
+                    text: 'ZONE',
+                    style: TextStyle(color: AppColors.greenColor),
+                  ),
                 ],
               ),
             ),
@@ -47,12 +56,21 @@ class HomeScreen extends StatelessWidget {
                     top: 0,
                     child: Container(
                       padding: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(8)),
-                      constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 16,
+                        minHeight: 16,
+                      ),
                       child: Center(
                         child: Text(
                           '${cart.count}',
-                          style: const TextStyle(fontSize: 10, color: Colors.white),
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -60,10 +78,16 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const CartScreen()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CartScreen()),
+              );
             },
           ),
-          const AuthNotificationButton(),
+          IconButton(
+            icon: const Icon(Icons.notifications_none, color: Colors.white),
+            onPressed: () {},
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -79,9 +103,14 @@ class HomeScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 image: const DecorationImage(
-                  image: NetworkImage('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80'),
+                  image: NetworkImage(
+                    'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80',
+                  ),
                   fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(Colors.black54, BlendMode.darken),
+                  colorFilter: ColorFilter.mode(
+                    Colors.black54,
+                    BlendMode.darken,
+                  ),
                 ),
               ),
               child: Stack(
@@ -92,15 +121,28 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       Text(
                         'BIENVENIDO A',
-                        style: TextStyle(color: AppColors.greenColor, fontSize: 12, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          color: AppColors.greenColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       SizedBox(height: 4),
                       Text.rich(
                         TextSpan(
-                          style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900),
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w900,
+                          ),
                           children: [
-                            TextSpan(text: 'GYM', style: TextStyle(color: Colors.white)),
-                            TextSpan(text: 'ZONE', style: TextStyle(color: AppColors.greenColor)),
+                            TextSpan(
+                              text: 'GYM',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            TextSpan(
+                              text: 'ZONE',
+                              style: TextStyle(color: AppColors.greenColor),
+                            ),
                           ],
                         ),
                       ),
@@ -115,28 +157,53 @@ class HomeScreen extends StatelessWidget {
                     right: 0,
                     bottom: 0,
                     child: ElevatedButton(
-                      onPressed: () => showLoginDialog(context),
+                      onPressed: () => (context),
                       style: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all(AppColors.greenColor),
+                        backgroundColor: WidgetStateProperty.all(
+                          AppColors.greenColor,
+                        ),
                         foregroundColor: WidgetStateProperty.all(Colors.black),
                         elevation: WidgetStateProperty.all(2),
-                        shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                        shape: WidgetStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
                         side: WidgetStateProperty.all(BorderSide.none),
-                        overlayColor: WidgetStateProperty.resolveWith((states) => states.contains(WidgetState.hovered) ? Colors.white12 : null),
+                        overlayColor: WidgetStateProperty.resolveWith(
+                          (states) => states.contains(WidgetState.hovered)
+                              ? Colors.white12
+                              : null,
+                        ),
                       ),
-                      child: const Text('ÚNETE', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: const Text(
+                        'ÚNETE',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
             const SizedBox(height: 24),
-            const Text('ACCESO RÁPIDO', style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1)),
+            const Text(
+              'ACCESO RÁPIDO',
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1,
+              ),
+            ),
             const SizedBox(height: 12),
             // BOTONES ACCESO RÁPIDO
             const Row(
               children: [
-                QuickCard(icon: Icons.fitness_center, title: 'Rutinas', isSelected: true),
+                QuickCard(
+                  icon: Icons.fitness_center,
+                  title: 'Rutinas',
+                  isSelected: true,
+                ),
                 SizedBox(width: 12),
                 QuickCard(icon: Icons.restaurant, title: 'Menú'),
                 SizedBox(width: 12),
@@ -150,13 +217,31 @@ class HomeScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('CLASES DE HOY', style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1)),
+                const Text(
+                  'CLASES DE HOY',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1,
+                  ),
+                ),
                 TextButton(
                   onPressed: () {},
                   child: const Row(
                     children: [
-                      Text('Ver más ', style: TextStyle(color: AppColors.greenColor, fontSize: 12)),
-                      Icon(Icons.arrow_forward_ios, color: AppColors.greenColor, size: 10),
+                      Text(
+                        'Ver más ',
+                        style: TextStyle(
+                          color: AppColors.greenColor,
+                          fontSize: 12,
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        color: AppColors.greenColor,
+                        size: 10,
+                      ),
                     ],
                   ),
                 ),
@@ -168,7 +253,15 @@ class HomeScreen extends StatelessWidget {
             _buildClassTile('Yoga', 'M. González', '9:00 AM', '12 cupos'),
             const SizedBox(height: 24),
             // NUESTROS SERVICIOS
-            const Text('NUESTROS SERVICIOS', style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1)),
+            const Text(
+              'NUESTROS SERVICIOS',
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1,
+              ),
+            ),
             const SizedBox(height: 12),
             GridView.count(
               crossAxisCount: 2,
@@ -178,10 +271,26 @@ class HomeScreen extends StatelessWidget {
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
               children: const [
-                _ServiceCard(icon: Icons.fitness_center, title: 'Fuerza', subtitle: 'Pesas & máquinas'),
-                _ServiceCard(icon: Icons.favorite, title: 'Cardio', subtitle: 'Spinning & HIIT'),
-                _ServiceCard(icon: Icons.groups, title: 'Clases', subtitle: 'Yoga, Zumba y otras clases'),
-                _ServiceCard(icon: Icons.bolt, title: 'Personal', subtitle: 'Entrenador 1:1'),
+                _ServiceCard(
+                  icon: Icons.fitness_center,
+                  title: 'Fuerza',
+                  subtitle: 'Pesas & máquinas',
+                ),
+                _ServiceCard(
+                  icon: Icons.favorite,
+                  title: 'Cardio',
+                  subtitle: 'Spinning & HIIT',
+                ),
+                _ServiceCard(
+                  icon: Icons.groups,
+                  title: 'Clases',
+                  subtitle: 'Yoga, Zumba y otras clases',
+                ),
+                _ServiceCard(
+                  icon: Icons.bolt,
+                  title: 'Personal',
+                  subtitle: 'Entrenador 1:1',
+                ),
               ],
             ),
             const SizedBox(height: 20),
@@ -192,11 +301,20 @@ class HomeScreen extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
-                  colors: [AppColors.greenColor.withAlpha(45), AppColors.cardBg],
+                  colors: [
+                    AppColors.greenColor.withAlpha(45),
+                    AppColors.cardBg,
+                  ],
                 ),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: AppColors.greenColor.withAlpha(128)),
-                boxShadow: [BoxShadow(color: Colors.black.withAlpha(128), blurRadius: 8, offset: const Offset(0, 4))],
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withAlpha(128),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -204,30 +322,64 @@ class HomeScreen extends StatelessWidget {
                   const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('PLAN ELITE', style: TextStyle(color: AppColors.greenColor, fontWeight: FontWeight.bold, fontSize: 12)),
+                      Text(
+                        'PLAN ELITE',
+                        style: TextStyle(
+                          color: AppColors.greenColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      ),
                       SizedBox(height: 4),
                       Text.rich(
                         TextSpan(
                           children: [
-                            TextSpan(text: '\$100.000', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
-                            TextSpan(text: '/mes', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                            TextSpan(
+                              text: '\$100.000',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            TextSpan(
+                              text: '/mes',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            ),
                           ],
                         ),
                       ),
                       SizedBox(height: 4),
-                      Text('Acceso total + entrenador personal', style: TextStyle(color: Colors.grey, fontSize: 11)),
+                      Text(
+                        'Acceso total + entrenador personal',
+                        style: TextStyle(color: Colors.grey, fontSize: 11),
+                      ),
                     ],
                   ),
                   ElevatedButton(
-                    onPressed: () => showLoginDialog(context),
+                    onPressed: () => (context),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.greenColor,
                       foregroundColor: Colors.black,
                       elevation: 2,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 10,
+                      ),
                     ),
-                    child: const Text('VER PLANES', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                    child: const Text(
+                      'VER PLANES',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -238,11 +390,19 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  static Widget _buildClassTile(String name, String trainer, String time, String spots) {
+  static Widget _buildClassTile(
+    String name,
+    String trainer,
+    String time,
+    String spots,
+  ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(color: AppColors.cardBg, borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(
+        color: AppColors.cardBg,
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: Row(
         children: [
           Container(
@@ -252,23 +412,46 @@ class HomeScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: AppColors.greenColor.withAlpha(90)),
             ),
-            child: const Icon(Icons.play_arrow, color: AppColors.greenColor, size: 20),
+            child: const Icon(
+              Icons.play_arrow,
+              color: AppColors.greenColor,
+              size: 20,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                Text(trainer, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                Text(
+                  name,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+                Text(
+                  trainer,
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                ),
               ],
             ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(time, style: const TextStyle(color: AppColors.greenColor, fontWeight: FontWeight.bold, fontSize: 12)),
-              Text(spots, style: const TextStyle(color: Colors.grey, fontSize: 11)),
+              Text(
+                time,
+                style: const TextStyle(
+                  color: AppColors.greenColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+              ),
+              Text(
+                spots,
+                style: const TextStyle(color: Colors.grey, fontSize: 11),
+              ),
             ],
           ),
         ],
@@ -281,8 +464,12 @@ class _ServiceCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
-  const _ServiceCard({required this.icon, required this.title, required this.subtitle});
-  
+  const _ServiceCard({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -290,7 +477,13 @@ class _ServiceCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.cardBg,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.black.withAlpha(128), blurRadius: 6, offset: const Offset(0, 3))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(128),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: Row(
         children: [
@@ -309,11 +502,21 @@ class _ServiceCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                Text(subtitle, style: const TextStyle(color: Colors.grey, fontSize: 11), overflow: TextOverflow.ellipsis),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+                Text(
+                  subtitle,
+                  style: const TextStyle(color: Colors.grey, fontSize: 11),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
